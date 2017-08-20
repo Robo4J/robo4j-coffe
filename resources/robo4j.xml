@@ -1,0 +1,130 @@
+<robo4j>
+	<!-- Note that UUID override is possible here by setting id (not recommended) -->
+	<roboSystem name="Coff-E">
+		<!-- Thread pool size for on CPU workloads that may take a bit of time 
+			Tip, make this less than the number of cores, and make sure sum of pools 
+			(except blocking pool) is less or equal to the number of cores. -->
+		<workPool size="1" />
+		<!-- Thread pool size for default scheduler, which is also responsible 
+			for delivering the messages units send to each other. Tip, make this less 
+			than the number of cores, and make sure sum of pools (except blocking pool) 
+			is less or equal to the number of cores. -->
+		<schedulerPool size="3" />
+		<!-- Depends on the number of long lasting blocking operations you think 
+			you will end up running concurrently in the system. Hopefully you designed 
+			your system well, and have very few ;) -->
+		<blockingPool size="1" />
+	</roboSystem>
+
+	<roboUnit id="lcd">
+		<class>com.robo4j.units.rpi.lcd.AdafruitLcdUnit</class>
+		<config name="com.robo4j.core.root">
+			<value name="bus" type="int">1</value>
+			<value name="address" type="int">0x20</value>
+		</config>
+	</roboUnit>
+
+	<roboUnit id="buttons">
+		<class>com.robo4j.units.rpi.lcd.AdafruitButtonUnit</class>
+		<config name="com.robo4j.core.root">
+			<value name="bus" type="int">1</value>
+			<value name="address" type="int">0x20</value>
+			<value name="target" type="String">controller</value>
+		</config>
+	</roboUnit>
+	<robo4j>
+		<roboUnit id="motion">
+			<class>com.robo4j.units.rpi.roboclaw.RoboClawRCTankUnit</class>
+			<config name="com.robo4j.core.root">
+				<value name="bus" type="int">1</value>
+				<!-- 0x40 hex -->
+				<value name="address" type="int">0x40</value>
+				<value name="leftChannel" type="int">6</value>
+				<value name="rightChannel" type="int">7</value>
+			</config>
+		</roboUnit>
+	</robo4j>
+	<roboUnit id="laserscanner.servo">
+		<class>com.robo4j.units.rpi.pwm.PCA9685ServoUnit</class>
+		<config name="com.robo4j.core.root">
+			<value name="bus" type="int">1</value>
+			<!-- 0x40 hex -->
+			<value name="address" type="int">0x40</value>
+			<value name="channel" type="int">0</value>
+			<value name="trim" type="float">3</value>
+		</config>
+	</roboUnit>
+	<roboUnit id="laserscanner.tilt">
+		<class>com.robo4j.units.rpi.pwm.PCA9685ServoUnit</class>
+		<config name="com.robo4j.core.root">
+			<value name="bus" type="int">1</value>
+			<!-- 0x40 hex -->
+			<value name="address" type="int">0x40</value>
+			<value name="channel" type="int">1</value>
+			<value name="trim" type="float">-40</value>
+			<value name="inverted" type="boolean">true</value>
+		</config>
+	</roboUnit>
+	<roboUnit id="scanner">
+		<class>com.robo4j.units.rpi.lidarlite.LaserScanner</class>
+		<config name="com.robo4j.core.root">
+			<value name="bus" type="int">1</value>
+			<!-- 0x40 hex -->
+			<value name="address" type="int">0x62</value>
+			<value name="servo" type="String">laserscanner.servo</value>
+			<!-- Currently defined as the range from center to max -->
+			<value name="servoRange" type="float">45.0</value>
+			<!-- Currently defined as the angular speed in angular degrees per second -->
+			<value name="angularSpeed" type="float">100.0</value>
+			<!-- How long does the Lidar need to acquire a range -->
+			<value name="minAquisitionTime" type="float">2.5</value>
+			<!-- Trim to align left to right and right to left scans This will be 
+				added/subtracted depending on direction -->
+			<value name="trim" type="float">5.5</value>
+		</config>
+	</roboUnit>
+	<roboUnit id="gyro">
+		<class>com.robo4j.units.rpi.gyro.GyroL3GD20Unit</class>
+		<config name="com.robo4j.core.root">
+			<value name="bus" type="int">1</value>
+			<value name="address" type="int">0x6b</value>
+			<value name="sensitivity" type="String">DPS_245</value>
+			<value name="enableHighPass" type="boolean">true</value>
+			<!-- Periodicity, in ms, to sample the gyro -->
+			<value name="period" type="int">10</value>
+		</config>
+	</roboUnit>
+	<roboUnit id="tank">
+		<class>com.robo4j.coffe.Tank</class>
+		<config name="com.robo4j.core.root">
+			<value name="useTracks" type="boolean">false</value>
+		</config>
+	</roboUnit>
+	<roboUnit id="scanprocessor">
+		<class>com.robo4j.coffe.units.ScanProcessor</class>
+	</roboUnit>
+	<roboUnit id="missioncontroller">
+		<class>com.robo4j.coffe.controllers.MissionController</class>
+		<config name="com.robo4j.core.root">
+			<value name="lcd" type="String">lcd</value>
+			<value name="tank" type="String">tank</value>
+			<value name="scanner" type="String">scanner</value>
+			<value name="modeOfOperation" type="String">fastest_path</value>
+		</config>
+	</roboUnit>
+	<roboUnit id="claw">
+		<class>com.robo4j.coffe.ClawUnit</class>
+		<config name="com.robo4j.core.root">
+			<value name="bus" type="int">1</value>
+			<!-- 0x40 hex -->
+			<value name="address" type="int">0x62</value>
+			<value name="channel" type="int">4</value>
+			<value name="in1" type="String">GPIO_02</value>
+			<value name="in2" type="String">GPIO_03</value>
+			<value name="invert" type="boolean">true</value>
+			<!-- This is the default state of the claw. Be careful to make sure it 
+				matches the initial hardware state! -->
+			<value name="defaultState" type="String">OPEN</value>
+		</config>
+	</roboUnit>
+</robo4j>
