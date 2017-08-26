@@ -1,0 +1,20 @@
+<robo4j>
+	<!-- Note that UUID override is possible here by setting id (not recommended) -->
+	<roboSystem id="Coff-E">
+		<config name="com.robo4j.core.root">
+			<!-- Thread pool size for on CPU workloads that may take a bit of time 
+				Tip, make this less than the number of cores, and make sure sum of pools 
+				(except blocking pool) is less or equal to the number of cores. -->
+			<value name="poolSizeWorker" type="Integer">1</value>
+			<!-- Thread pool size for default scheduler, which is also responsible 
+				for delivering the messages units send to each other. Tip, make this less 
+				than the number of cores, and make sure sum of pools (except blocking pool) 
+				is less or equal to the number of cores. -->
+			<value name="poolSizeScheduler" type="Integer">3</value>
+			<!-- Depends on the number of long lasting blocking operations you think 
+				you will end up running concurrently in the system. Hopefully you designed 
+				your system well, and have very few ;) -->
+			<value name="poolSizeBlocking" type="Integer">10</value>
+		</config>
+	</roboSystem>
+</robo4j>

@@ -1,21 +1,4 @@
 <robo4j>
-	<!-- Note that UUID override is possible here by setting id (not recommended) -->
-	<roboSystem name="Coff-E">
-		<!-- Thread pool size for on CPU workloads that may take a bit of time 
-			Tip, make this less than the number of cores, and make sure sum of pools 
-			(except blocking pool) is less or equal to the number of cores. -->
-		<workPool size="1" />
-		<!-- Thread pool size for default scheduler, which is also responsible 
-			for delivering the messages units send to each other. Tip, make this less 
-			than the number of cores, and make sure sum of pools (except blocking pool) 
-			is less or equal to the number of cores. -->
-		<schedulerPool size="3" />
-		<!-- Depends on the number of long lasting blocking operations you think 
-			you will end up running concurrently in the system. Hopefully you designed 
-			your system well, and have very few ;) -->
-		<blockingPool size="1" />
-	</roboSystem>
-
 	<roboUnit id="lcd">
 		<class>com.robo4j.units.rpi.lcd.AdafruitLcdUnit</class>
 		<config name="com.robo4j.core.root">

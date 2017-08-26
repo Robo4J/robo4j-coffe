@@ -50,7 +50,8 @@ public class Main {
 	 */
 	public static void main(String[] args) throws RoboBuilderException, IOException, ConfigurationException, InterruptedException {
 		SimpleLoggingUtil.print(Main.class, "Starting Coff-E.\nLoading system...");
-		RoboBuilder builder = new RoboBuilder(Main.class.getClassLoader().getResourceAsStream("robo4j.xml"));
+		RoboBuilder builder = new RoboBuilder(Main.class.getResourceAsStream("system.xml"));
+		builder.add(Main.class.getResourceAsStream("units.xml"));
 		RoboContext ctx = builder.build();
 
 		SimpleLoggingUtil.print(Main.class, "System loaded. Starting...");
