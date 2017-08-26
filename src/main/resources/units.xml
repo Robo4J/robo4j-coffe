@@ -102,8 +102,8 @@
 			<!-- 0x40 hex -->
 			<value name="address" type="int">0x62</value>
 			<value name="channel" type="int">4</value>
-			<value name="in1" type="String">GPIO_02</value>
-			<value name="in2" type="String">GPIO_03</value>
+			<value name="in1" type="String">GPIO 2</value>
+			<value name="in2" type="String">GPIO 3</value>
 			<value name="invert" type="boolean">true</value>
 			<!-- This is the default state of the claw. Be careful to make sure it 
 				matches the initial hardware state! -->
