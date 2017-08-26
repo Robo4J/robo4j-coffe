@@ -104,7 +104,6 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	public MissionController(RoboContext ctx, String id) {
 		super(MissionControllerEvent.class, ctx, id);
 		scannerDelegate = new ScannerDelegate();
-		reset();
 	}
 
 	@Override
@@ -134,14 +133,14 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		super.onMessage(message);
 		switch (message) {
 		case START:
-			RoboReference<LcdMessage> lcd = getLcdUnit();
-			RoboReference<MotionEvent> motion = getMotionUnit();
+			getLcdUnit().sendMessage(new LcdMessage("Starting...", Color.TEAL));
+			reset();
 			switch (currentMode) {
 			case FASTEST_PATH:
 				initiateFastestPathMode();
 				break;
 			default:
-				motion.sendMessage(new MotionEvent(0, 0));
+				getTank().sendMessage(new TankEvent(0, 0, 0));
 				SimpleLoggingUtil.error(MissionController.class, "Mode not supported:" + message);
 			}
 		case STOPPED_ROTATING:
