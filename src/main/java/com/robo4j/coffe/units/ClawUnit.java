@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.robo4j.core.ConfigurationException;
 import com.robo4j.core.RoboContext;
+import com.robo4j.core.RoboUnit;
 import com.robo4j.core.configuration.Configuration;
-import com.robo4j.units.rpi.I2CRoboUnit;
 import com.robo4j.units.rpi.pwm.MC33926HBridgeUnit;
 
 /**
@@ -32,7 +32,7 @@ import com.robo4j.units.rpi.pwm.MC33926HBridgeUnit;
  * 
  * @author Marcus
  */
-public class ClawUnit extends I2CRoboUnit<ClawState> {
+public class ClawUnit extends RoboUnit<ClawState> {
 	/**
 	 * Time to open claw.
 	 */
@@ -97,7 +97,6 @@ public class ClawUnit extends I2CRoboUnit<ClawState> {
 		if (closeTime == -1) {
 			throw ConfigurationException.createMissingConfigNameException(PROPERTY_KEY_CLOSE_TIME);
 		}
-		super.onInitialization(configuration);
 	}
 
 	@Override
