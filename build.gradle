@@ -38,3 +38,23 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-all:${hamcrestAllVersion}@jar"
     testCompile "org.mockito:mockito-all:${mockitoAllVersion}@jar"
 }
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
