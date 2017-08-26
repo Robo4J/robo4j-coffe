@@ -15,13 +15,15 @@ repositories {
     mavenLocal()
 }
 
+jar {
+    manifest {
+    attributes 'Implementation-Title': 'robo4j-coffe',
+            'Implementation-Version': version,
+            'Main-Class': 'com.robo4j.coffe.Main'
+	}
+}
 //create a single Jar with all dependencies
 task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'robo4j-coffe',
-                'Implementation-Version': version,
-                'Main-Class': 'com.robo4j.coffe.Main'
-    }
     baseName = 'robo4j-coffe'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
