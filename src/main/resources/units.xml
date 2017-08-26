@@ -78,7 +78,7 @@
 		</config>
 	</roboUnit>
 	<roboUnit id="tank">
-		<class>com.robo4j.coffe.Tank</class>
+		<class>com.robo4j.coffe.controllers.TankController</class>
 		<config name="com.robo4j.core.root">
 			<value name="useTracks" type="boolean">false</value>
 		</config>
@@ -96,7 +96,7 @@
 		</config>
 	</roboUnit>
 	<roboUnit id="claw">
-		<class>com.robo4j.coffe.ClawUnit</class>
+		<class>com.robo4j.coffe.units.ClawUnit</class>
 		<config name="com.robo4j.core.root">
 			<value name="bus" type="int">1</value>
 			<!-- 0x40 hex -->
