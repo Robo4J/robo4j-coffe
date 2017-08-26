@@ -95,19 +95,4 @@
 			<value name="modeOfOperation" type="String">fastest_path</value>
 		</config>
 	</roboUnit>
-	<roboUnit id="claw">
-		<class>com.robo4j.coffe.units.ClawUnit</class>
-		<config name="com.robo4j.core.root">
-			<value name="bus" type="int">1</value>
-			<!-- 0x40 hex -->
-			<value name="address" type="int">0x62</value>
-			<value name="channel" type="int">4</value>
-			<value name="in1" type="String">GPIO 2</value>
-			<value name="in2" type="String">GPIO 3</value>
-			<value name="invert" type="boolean">true</value>
-			<!-- This is the default state of the claw. Be careful to make sure it 
-				matches the initial hardware state! -->
-			<value name="defaultState" type="String">OPEN</value>
-		</config>
-	</roboUnit>
 </robo4j>
