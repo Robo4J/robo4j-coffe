@@ -18,6 +18,7 @@ package com.robo4j.coffe;
 
 import java.io.IOException;
 
+import com.robo4j.coffe.controllers.MissionControllerEvent;
 import com.robo4j.coffe.controllers.ModeOfOperation;
 import com.robo4j.core.ConfigurationException;
 import com.robo4j.core.RoboBuilder;
@@ -73,7 +74,7 @@ public class Main {
 		Thread.sleep(3000);
 
 		ctx.getReference("lcd").sendMessage(new LcdMessage("Starting Coff-E!"));
-		ctx.getReference("missioncontroller").sendMessage(ModeOfOperation.FASTEST_PATH);
+		ctx.getReference("missioncontroller").sendMessage(MissionControllerEvent.START);
 
 		System.out.println("Press enter to quit!");
 		System.in.read();
