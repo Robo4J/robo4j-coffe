@@ -19,7 +19,7 @@ package com.robo4j.coffe;
 import java.io.IOException;
 
 import com.robo4j.coffe.controllers.MissionControllerEvent;
-import com.robo4j.coffe.controllers.ModeOfOperation;
+import com.robo4j.coffe.units.LocalReferenceAdapter;
 import com.robo4j.core.ConfigurationException;
 import com.robo4j.core.RoboBuilder;
 import com.robo4j.core.RoboBuilderException;
@@ -27,6 +27,7 @@ import com.robo4j.core.RoboContext;
 import com.robo4j.core.logging.SimpleLoggingUtil;
 import com.robo4j.core.util.SystemUtil;
 import com.robo4j.hw.rpi.i2c.adafruitlcd.Color;
+import com.robo4j.units.rpi.gyro.GyroEvent;
 import com.robo4j.units.rpi.gyro.GyroRequest;
 import com.robo4j.units.rpi.gyro.GyroRequest.GyroAction;
 import com.robo4j.units.rpi.lcd.LcdMessage;
@@ -53,7 +54,7 @@ public class Main {
 		SimpleLoggingUtil.print(Main.class, "Starting Coff-E.\nLoading system...");
 		RoboBuilder builder = new RoboBuilder(Main.class.getClassLoader().getResourceAsStream("system.xml"));
 		builder.add(Main.class.getClassLoader().getResourceAsStream("units.xml"));
-		RoboContext ctx = builder.build();
+		final RoboContext ctx = builder.build();
 
 		SimpleLoggingUtil.print(Main.class, "System loaded. Starting...");
 
@@ -67,14 +68,13 @@ public class Main {
 
 		System.out.println("Starting calibration (do not touch anything!):");
 		ctx.getReference("lcd").sendMessage(new LcdMessage("Calibrating...\nBe still!", Color.RED));
-		ctx.getReference("gyro").sendMessage(new GyroRequest(null, GyroAction.CALIBRATE, null));
-		// NOTE(Marcus/Aug 20, 2017): One way to skip this sleep would be to
-		// either not accept gyro requests until calibration done, or update the
-		// GyroEvent to notify when calibration is done.
-		Thread.sleep(3000);
-
-		ctx.getReference("lcd").sendMessage(new LcdMessage("Starting Coff-E!"));
-		ctx.getReference("missioncontroller").sendMessage(MissionControllerEvent.START);
+		ctx.getReference("gyro").sendMessage(new GyroRequest(new LocalReferenceAdapter<GyroEvent>(GyroEvent.class) {
+			@Override
+			public void sendMessage(GyroEvent event) {
+				ctx.getReference("lcd").sendMessage(new LcdMessage("Starting Coff-E!"));
+				ctx.getReference("missioncontroller").sendMessage(MissionControllerEvent.START);
+			}
+		}, GyroAction.CALIBRATE, null));
 
 		System.out.println("Press enter to quit!");
 		System.in.read();

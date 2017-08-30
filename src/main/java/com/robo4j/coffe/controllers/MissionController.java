@@ -55,7 +55,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	 * The reference id of the scan processor
 	 */
 	public static final String KEY_ID_SCAN_PROCESSOR = "scanprocessor";
-	
+
 	/**
 	 * The mode of operation.
 	 */
@@ -63,11 +63,12 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 
 	private final ScannerDelegate scannerDelegate;
 	private volatile ModeOfOperation currentMode = ModeOfOperation.FASTEST_PATH;
-	
-	// Using this to make sure that we don't send multiple scan requests concurrently.
+
+	// Using this to make sure that we don't send multiple scan requests
+	// concurrently.
 	private final AtomicBoolean laserLock = new AtomicBoolean();
 	private volatile FastestPathState currentPathState = FastestPathState.NMI;
-	
+
 	private String refIdLcd;
 	private String refIdTank;
 	private String refIdScanner;
@@ -130,7 +131,6 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 
 	@Override
 	public void onMessage(MissionControllerEvent message) {
-		super.onMessage(message);
 		switch (message) {
 		case START:
 			getLcdUnit().sendMessage(new LcdMessage("Starting...", Color.TEAL));
