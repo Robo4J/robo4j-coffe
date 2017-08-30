@@ -94,6 +94,7 @@
 			<value name="lcd" type="String">lcd</value>
 			<value name="tank" type="String">tank</value>
 			<value name="scanner" type="String">scanner</value>
+			<value name="scanProcessor" type="String">scanprocessor</value>
 			<value name="modeOfOperation" type="String">fastest_path</value>
 		</config>
 	</roboUnit>

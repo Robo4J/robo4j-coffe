@@ -16,6 +16,8 @@
  */
 package com.robo4j.coffe.controllers;
 
+import com.robo4j.hw.rpi.i2c.adafruitlcd.Color;
+
 /**
  * These are the states that Coff-E will move when in the
  * {@link ModeOfOperation#FASTEST_PATH}.
@@ -26,14 +28,30 @@ public enum FastestPathState {
 	/**
 	 * Coff-E decided he needs more information. Is also the start state.
 	 */
-	NMI,
+	NMI(Color.BLUE, "Gathering Info"),
 	/**
 	 * Coff-E decided he is cornered (there are no good paths to travel).
 	 */
-	CORNERED,
+	CORNERED(Color.RED, "Cornered"),
 	/**
-	 * Coff-E has acquired a target, and is moving towards it, making adjustments
-	 * as he goes.
+	 * Coff-E has acquired a target, and is moving towards it, making
+	 * adjustments as he goes.
 	 */
-	MOVE_TO_TARGET
+	MOVE_TO_TARGET(Color.TEAL, "Moving to Target");
+
+	Color stateColor;
+	String humanFriendlyName;
+	
+	FastestPathState(Color stateColor, String humanFriendlyName) {
+		this.stateColor = stateColor;
+		this.humanFriendlyName = humanFriendlyName;
+	}
+	
+	public Color getStateColor() {
+		return stateColor;
+	}
+	
+	public String getHumanFriendlyName() {
+		return humanFriendlyName;
+	}
 }

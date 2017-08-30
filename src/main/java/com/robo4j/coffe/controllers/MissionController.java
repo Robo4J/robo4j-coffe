@@ -18,17 +18,22 @@ package com.robo4j.coffe.controllers;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.robo4j.coffe.units.AnalysisResult;
+import com.robo4j.coffe.units.ProcessingRequest;
+import com.robo4j.coffe.units.ProcessingRequest.Scope;
 import com.robo4j.core.ConfigurationException;
+import com.robo4j.core.LocalReferenceAdapter;
 import com.robo4j.core.RoboContext;
 import com.robo4j.core.RoboReference;
 import com.robo4j.core.RoboUnit;
 import com.robo4j.core.configuration.Configuration;
 import com.robo4j.core.logging.SimpleLoggingUtil;
 import com.robo4j.hw.rpi.i2c.adafruitlcd.Color;
+import com.robo4j.math.features.Raycast;
+import com.robo4j.math.geometry.Point2f;
 import com.robo4j.math.geometry.ScanResult2D;
 import com.robo4j.units.rpi.lcd.LcdMessage;
 import com.robo4j.units.rpi.lidarlite.ScanRequest;
-import com.robo4j.units.rpi.roboclaw.MotionEvent;
 
 /**
  * This is a simple high level mission controller for Coff-E.
@@ -36,6 +41,14 @@ import com.robo4j.units.rpi.roboclaw.MotionEvent;
  * @author Marcus Hirt
  */
 public class MissionController extends RoboUnit<MissionControllerEvent> {
+	private static final float MIN_LATERAL_DISTANCE = 0.32f; // in meters
+	private static final float RAYCASTING_STEP_ANGLE = (float) Math.toRadians(0.4f);
+	private static final float DETAILED_RAYCASTING_STEP_ANGLE = (float) Math.toRadians(0.2f);
+	private static final float ONE_DEGREE = (float) Math.toRadians(1.0); // in
+																			// meters
+
+	private static final float ANGULAR_RESOLUTION_FULL_SCAN = 0.3f;
+
 	/**
 	 * The reference id of the tank unit.
 	 */
@@ -54,7 +67,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	/**
 	 * The reference id of the scan processor
 	 */
-	public static final String KEY_ID_SCAN_PROCESSOR = "scanprocessor";
+	public static final String KEY_ID_SCAN_PROCESSOR = "scanProcessor";
 
 	/**
 	 * The mode of operation.
@@ -62,6 +75,8 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	public static final String KEY_MODE_OF_OPERATION = "modeOfOperation";
 
 	private final ScannerDelegate scannerDelegate;
+	private final AnalysisDelegate analysisDelegate;
+
 	private volatile ModeOfOperation currentMode = ModeOfOperation.FASTEST_PATH;
 
 	// Using this to make sure that we don't send multiple scan requests
@@ -72,9 +87,11 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	private String refIdLcd;
 	private String refIdTank;
 	private String refIdScanner;
+	private String refIdScanProcessor;
 
 	/**
 	 * This is a simple delegate class for accepting the scan messages.
+	 * NOTE(Marcus/Aug 30, 2017): Use the LocalReferenceAdapter here...
 	 */
 	private class ScannerDelegate extends RoboUnit<ScanResult2D> {
 		private static final String ID_SCANNER_DELEGATE = "__scannerDelegate";
@@ -97,6 +114,30 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	}
 
 	/**
+	 * This is a simple delegate class for accepting the analyzed scans.
+	 * NOTE(Marcus/Aug 30, 2017): Use the LocalReferenceAdapter here...
+	 */
+	private class AnalysisDelegate extends RoboUnit<AnalysisResult> {
+		private static final String ID_ANALYSIS_DELEGATE = "__analysisDelegate";
+
+		public AnalysisDelegate() {
+			super(AnalysisResult.class, MissionController.this.getContext(), ID_ANALYSIS_DELEGATE);
+		}
+
+		@Override
+		public void onMessage(AnalysisResult message) {
+			updateFromNewKnowledge(message);
+		}
+
+		// Don't bother scheduling this - the processing of the results will be
+		// scheduled in the worker pool anyways.
+		@Override
+		public void sendMessage(AnalysisResult message) {
+			onMessage(message);
+		}
+	}
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param ctx
@@ -105,6 +146,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	public MissionController(RoboContext ctx, String id) {
 		super(MissionControllerEvent.class, ctx, id);
 		scannerDelegate = new ScannerDelegate();
+		analysisDelegate = new AnalysisDelegate();
 	}
 
 	@Override
@@ -120,6 +162,10 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		refIdScanner = configuration.getString(KEY_ID_SCANNER, null);
 		if (refIdScanner == null) {
 			throw ConfigurationException.createMissingConfigNameException(KEY_ID_SCANNER);
+		}
+		refIdScanProcessor = configuration.getString(KEY_ID_SCAN_PROCESSOR, null);
+		if (refIdScanProcessor == null) {
+			throw ConfigurationException.createMissingConfigNameException(KEY_ID_SCAN_PROCESSOR);
 		}
 		currentMode = getModeOfOperation(configuration);
 	}
@@ -158,13 +204,30 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	private void scheduleFullScan() {
 		if (laserLock.compareAndSet(false, true)) {
 			RoboReference<ScanRequest> scanner = getScannerUnit();
-			scanner.sendMessage(new ScanRequest(scannerDelegate, ScanRequest.ScanAction.ONCE, -45f, 90f, 0.3f));
+			scanner.sendMessage(new ScanRequest(scannerDelegate, ScanRequest.ScanAction.ONCE, -45f, 90f, ANGULAR_RESOLUTION_FULL_SCAN));
 		}
 	}
 
 	private void receiveNewScan(ScanResult2D message) {
 		laserLock.set(false);
 		// Send to feature extractor on the worker thread.
+		getScanProcessor().sendMessage(new ProcessingRequest(analysisDelegate, message, Scope.ALL, message.getAngularResolution()));
+	}
+
+	// NOTE(Marcus/Aug 30, 2017): This is delivered on the work queue, which is
+	// fine, since we will start calculating a lot... ;)
+	private void updateFromNewKnowledge(AnalysisResult message) {
+		Point2f targetPoint = Raycast.raycastMostPromisingPoint(message.getSource().getPoints(), MIN_LATERAL_DISTANCE,
+				DETAILED_RAYCASTING_STEP_ANGLE, message.getFeatures());
+		getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
+			@Override
+			public void sendMessage(RotationDoneNotification message) {
+				// Should probably schedule a time out thing here too... If
+				// rotation fails.
+				updateState(FastestPathState.MOVE_TO_TARGET);
+				startMoveToTarget();
+			}
+		}, 0.3f, 0f, targetPoint.getAngle()));
 	}
 
 	private void reset() {
@@ -179,10 +242,6 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		getLcdUnit().sendMessage(new LcdMessage(message, color));
 	}
 
-	private RoboReference<MotionEvent> getMotionUnit() {
-		return getContext().getReference(refIdTank);
-	}
-
 	private RoboReference<LcdMessage> getLcdUnit() {
 		return getContext().getReference(refIdLcd);
 	}
@@ -191,7 +250,23 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		return getContext().getReference(refIdScanner);
 	}
 
+	private RoboReference<ProcessingRequest> getScanProcessor() {
+		return getContext().getReference(refIdScanProcessor);
+	}
+
 	public RoboUnit<?> getDelegate() {
 		return scannerDelegate;
+	}
+
+	private void updateState(FastestPathState newState) {
+		printMessage(newState.getStateColor(), newState.getHumanFriendlyName());
+	}
+
+	private void startMoveToTarget() {
+		System.out.println("Moving to target");
+		// 1. Quick scan...
+		// 2. Analyze quick scan...
+		// 3. If not too close, update speed and direction...
+		// 4. If too close, enter NMI.
 	}
 }
