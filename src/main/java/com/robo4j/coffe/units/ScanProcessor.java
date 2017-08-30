@@ -21,6 +21,8 @@ import com.robo4j.core.RoboUnit;
 import com.robo4j.core.WorkTrait;
 import com.robo4j.math.features.FeatureExtraction;
 import com.robo4j.math.features.FeatureSet;
+import com.robo4j.math.features.Raycast;
+import com.robo4j.math.geometry.Point2f;
 
 /**
  * This unit analyzes scans.
@@ -33,6 +35,19 @@ import com.robo4j.math.features.FeatureSet;
  */
 @WorkTrait
 public class ScanProcessor extends RoboUnit<ProcessingRequest> {
+	private static final float MIN_LATERAL_DISTANCE = 0.32f; // in meters
+	private static final float RAYCASTING_STEP_ANGLE = (float) Math.toRadians(0.4f);
+	private static final float DETAILED_RAYCASTING_STEP_ANGLE = (float) Math.toRadians(0.2f);
+	private static final float ONE_DEGREE = (float) Math.toRadians(1.0);
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param context
+	 *            the RoboContext
+	 * @param id
+	 *            the id of the ScanProcessor unit.
+	 */
 	public ScanProcessor(RoboContext context, String id) {
 		super(ProcessingRequest.class, context, id);
 	}
@@ -44,6 +59,9 @@ public class ScanProcessor extends RoboUnit<ProcessingRequest> {
 		// expensive, but will not hold up the system scheduler, since this unit
 		// is marked as @WorkTrait.
 		FeatureSet features = FeatureExtraction.getFeatures(message.getScan().getPoints(), message.getAngularResolution());
-		message.getRecipient().sendMessage(new AnalysisResult(message.getScan(), features));
+		Point2f targetPoint = Raycast.raycastMostPromisingPoint(message.getScan().getPoints(), MIN_LATERAL_DISTANCE,
+				DETAILED_RAYCASTING_STEP_ANGLE, features);
+
+		message.getRecipient().sendMessage(new AnalysisResult(message.getScan(), features, targetPoint));
 	}
 }

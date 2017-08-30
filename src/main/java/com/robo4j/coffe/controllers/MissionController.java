@@ -41,12 +41,6 @@ import com.robo4j.units.rpi.lidarlite.ScanRequest;
  * @author Marcus Hirt
  */
 public class MissionController extends RoboUnit<MissionControllerEvent> {
-	private static final float MIN_LATERAL_DISTANCE = 0.32f; // in meters
-	private static final float RAYCASTING_STEP_ANGLE = (float) Math.toRadians(0.4f);
-	private static final float DETAILED_RAYCASTING_STEP_ANGLE = (float) Math.toRadians(0.2f);
-	private static final float ONE_DEGREE = (float) Math.toRadians(1.0); // in
-																			// meters
-
 	private static final float ANGULAR_RESOLUTION_FULL_SCAN = 0.3f;
 
 	/**
@@ -217,8 +211,6 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	// NOTE(Marcus/Aug 30, 2017): This is delivered on the work queue, which is
 	// fine, since we will start calculating a lot... ;)
 	private void updateFromNewKnowledge(AnalysisResult message) {
-		Point2f targetPoint = Raycast.raycastMostPromisingPoint(message.getSource().getPoints(), MIN_LATERAL_DISTANCE,
-				DETAILED_RAYCASTING_STEP_ANGLE, message.getFeatures());
 		getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
 			@Override
 			public void sendMessage(RotationDoneNotification message) {
@@ -227,7 +219,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 				updateState(FastestPathState.MOVE_TO_TARGET);
 				startMoveToTarget();
 			}
-		}, 0.3f, 0f, (float) Math.toDegrees(targetPoint.getAngle())));
+		}, 0.3f, 0f, (float) Math.toDegrees(message.getTargetPoint().getAngle())));
 	}
 
 	private void reset() {

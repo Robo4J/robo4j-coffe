@@ -17,6 +17,7 @@
 package com.robo4j.coffe.units;
 
 import com.robo4j.math.features.FeatureSet;
+import com.robo4j.math.geometry.Point2f;
 import com.robo4j.math.geometry.ScanResult2D;
 
 /**
@@ -30,10 +31,12 @@ import com.robo4j.math.geometry.ScanResult2D;
 public final class AnalysisResult {
 	private final ScanResult2D source;
 	private final FeatureSet features;
+	private final Point2f targetPoint;
 
-	public AnalysisResult(ScanResult2D source, FeatureSet features) {
+	public AnalysisResult(ScanResult2D source, FeatureSet features, Point2f targetPoint) {
 		this.source = source;
 		this.features = features;
+		this.targetPoint = targetPoint;
 	}
 
 	public FeatureSet getFeatures() {
@@ -42,5 +45,9 @@ public final class AnalysisResult {
 
 	public ScanResult2D getSource() {
 		return source;
+	}
+
+	public Point2f getTargetPoint() {
+		return targetPoint;
 	}
 }
