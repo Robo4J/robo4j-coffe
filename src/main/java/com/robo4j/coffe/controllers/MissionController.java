@@ -227,7 +227,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 				updateState(FastestPathState.MOVE_TO_TARGET);
 				startMoveToTarget();
 			}
-		}, 0.3f, 0f, targetPoint.getAngle()));
+		}, 0.3f, 0f, (float) Math.toDegrees(targetPoint.getAngle())));
 	}
 
 	private void reset() {
