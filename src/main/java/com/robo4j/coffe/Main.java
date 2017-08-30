@@ -71,7 +71,7 @@ public class Main {
 		ctx.getReference("gyro").sendMessage(new GyroRequest(new LocalReferenceAdapter<GyroEvent>(GyroEvent.class) {
 			@Override
 			public void sendMessage(GyroEvent event) {
-				ctx.getReference("lcd").sendMessage(new LcdMessage("Starting Coff-E!"));
+				ctx.getReference("lcd").sendMessage(new LcdMessage("Starting Coff-E!\nStay clear... ;)", Color.YELLOW));
 				ctx.getReference("missioncontroller").sendMessage(MissionControllerEvent.START);
 			}
 		}, GyroAction.CALIBRATE, null));
