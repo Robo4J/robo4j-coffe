@@ -53,11 +53,17 @@ public class TankController extends RoboUnit<TankEvent> {
 	 */
 	public static final String KEY_IS_USING_TRACKS = "useTracks";
 
+	/**
+	 * This controls the maximum speed that Coff-E will run at.
+	 */
+	public static final String KEY_MAX_SPEED = "maxSpeed";
+
 	private final RoboContext ctx;
 	private final AtomicBoolean isRotating = new AtomicBoolean(false);
 	private final GyroDelegate gyroDelegate;
 
 	private volatile float targetAngle;
+	private float maxSpeed = 1.0f;
 	private boolean isUsingTracks = false;
 
 	private class GyroDelegate extends RoboUnit<GyroEvent> {
@@ -101,7 +107,7 @@ public class TankController extends RoboUnit<TankEvent> {
 	public void setSpeed(float speed, float direction) {
 		RoboReference<MotionEvent> reference = ctx.getReference(REF_ID_MOTION);
 		if (reference != null) {
-			reference.sendMessage(new MotionEvent(speed, direction));
+			reference.sendMessage(new MotionEvent(speed * maxSpeed, direction));
 		} else {
 			SimpleLoggingUtil.error(TankController.class, "Could not find the reference for " + REF_ID_MOTION);
 		}
@@ -132,11 +138,11 @@ public class TankController extends RoboUnit<TankEvent> {
 			getGyro().sendMessage(new GyroRequest(gyroDelegate, GyroAction.CONTINUOUS, new Tuple3f(0f, 0f, message.getRotate())));
 			float direction = 0;
 			if (isUsingTracks) {
-				direction = message.getRotate() > 0 ? DEGREES_80 : DEGREES_280;			
+				direction = message.getRotate() > 0 ? DEGREES_80 : DEGREES_280;
 			} else {
-				direction = message.getRotate() > 0 ? DEGREES_90 : DEGREES_270;						
+				direction = message.getRotate() > 0 ? DEGREES_90 : DEGREES_270;
 			}
-			setSpeed(message.getSpeed(), direction);
+			setSpeed(message.getSpeed() * maxSpeed, direction);
 		}
 	}
 
@@ -154,6 +160,7 @@ public class TankController extends RoboUnit<TankEvent> {
 	@Override
 	protected void onInitialization(Configuration configuration) throws ConfigurationException {
 		isUsingTracks = configuration.getBoolean(KEY_IS_USING_TRACKS, false);
+		maxSpeed = configuration.getFloat(KEY_MAX_SPEED, 1.0f);
 	}
 
 	private void processGyroEvent(GyroEvent message) {
@@ -175,7 +182,7 @@ public class TankController extends RoboUnit<TankEvent> {
 	}
 
 	private void notifyRotationTarget() {
-		
+
 	}
 
 	@Override
