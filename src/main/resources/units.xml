@@ -35,6 +35,7 @@
 			<value name="address" type="int">0x40</value>
 			<value name="channel" type="int">0</value>
 			<value name="trim" type="float">3</value>
+			<value name="shutdownValue" type="float">0</value>
 		</config>
 	</roboUnit>
 	<roboUnit id="laserscanner.tilt">
@@ -46,6 +47,7 @@
 			<value name="channel" type="int">1</value>
 			<value name="trim" type="float">-40</value>
 			<value name="inverted" type="boolean">true</value>
+			<value name="shutdownValue" type="float">0</value>
 		</config>
 	</roboUnit>
 	<roboUnit id="scanner">
