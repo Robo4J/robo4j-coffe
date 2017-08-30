@@ -19,8 +19,8 @@ package com.robo4j.coffe;
 import java.io.IOException;
 
 import com.robo4j.coffe.controllers.MissionControllerEvent;
-import com.robo4j.coffe.units.LocalReferenceAdapter;
 import com.robo4j.core.ConfigurationException;
+import com.robo4j.core.LocalReferenceAdapter;
 import com.robo4j.core.RoboBuilder;
 import com.robo4j.core.RoboBuilderException;
 import com.robo4j.core.RoboContext;
