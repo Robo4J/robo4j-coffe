@@ -71,7 +71,7 @@ public class Main {
 		ctx.getReference("gyro").sendMessage(new GyroRequest(new LocalReferenceAdapter<GyroEvent>(GyroEvent.class) {
 			@Override
 			public void sendMessage(GyroEvent event) {
-				ctx.getReference("lcd").sendMessage(new LcdMessage("Zeroing tilt!  \nHands off!      ", Color.YELLOW));
+				ctx.getReference("lcd").sendMessage(new LcdMessage("Zeroing tilt!\nHands off!", Color.YELLOW));
 				ctx.getReference("laserscanner.tilt").sendMessage(Float.valueOf(0f));
 				ctx.getReference("lcd").sendMessage(new LcdMessage("Starting Coff-E!\nStay clear... ;)", Color.YELLOW));
 				ctx.getReference("missioncontroller").sendMessage(MissionControllerEvent.START);
