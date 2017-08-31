@@ -142,7 +142,7 @@ public class TankController extends RoboUnit<TankEvent> {
 			} else {
 				direction = message.getRotate() > 0 ? DEGREES_90 : DEGREES_270;
 			}
-			setSpeed(message.getSpeed() * maxSpeed, direction);
+			setSpeed(message.getSpeed(), direction);
 		}
 	}
 
