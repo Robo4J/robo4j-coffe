@@ -85,7 +85,7 @@
 			<value name="useTracks" type="boolean">false</value>
 			<!-- This is a scalar with which the speed will be multiplied Set to 1.0 
 				to make Coff-E run at max speed. Set to lower to limit the speed. -->
-			<value name="maxSpeed" type="float">0.3</value>
+			<value name="maxSpeed" type="float">0.4</value>
 		</config>
 	</roboUnit>
 	<roboUnit id="scanprocessor">

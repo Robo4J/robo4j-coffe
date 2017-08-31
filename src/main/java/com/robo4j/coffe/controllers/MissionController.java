@@ -41,7 +41,7 @@ import com.robo4j.units.rpi.lidarlite.ScanRequest;
  * @author Marcus Hirt
  */
 public class MissionController extends RoboUnit<MissionControllerEvent> {
-	private static final float TURN_SPEED = 0.8f;
+	private static final float ROTATION_SPEED = 1.0f;
 	private static final float ANGULAR_RESOLUTION_FULL_SCAN = 0.3f;
 
 	/**
@@ -220,7 +220,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 				updateState(FastestPathState.MOVE_TO_TARGET);
 				startMoveToTarget();
 			}
-		}, TURN_SPEED, /* TODO: add turn direction from here*/ 0f, message.getTargetPoint().getAngle()));
+		}, ROTATION_SPEED, /* TODO: add turn direction from here*/ 0f, message.getTargetPoint().getAngle()));
 	}
 
 	private void reset() {
