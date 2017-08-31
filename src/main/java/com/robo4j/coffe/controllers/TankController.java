@@ -134,8 +134,8 @@ public class TankController extends RoboUnit<TankEvent> {
 
 	public void rotate(TankEvent message) {
 		if (isRotating.compareAndSet(false, true)) {
-			targetAngle = message.getRotate();
-			getGyro().sendMessage(new GyroRequest(gyroDelegate, GyroAction.CONTINUOUS, new Tuple3f(0f, 0f, message.getRotate())));
+			targetAngle = (float) Math.toDegrees(message.getRotate());
+			getGyro().sendMessage(new GyroRequest(gyroDelegate, GyroAction.CONTINUOUS, new Tuple3f(0f, 0f, targetAngle)));
 			float direction = 0;
 			if (isUsingTracks) {
 				direction = message.getRotate() > 0 ? DEGREES_80 : DEGREES_280;
@@ -173,7 +173,7 @@ public class TankController extends RoboUnit<TankEvent> {
 		}
 	}
 
-	private boolean isDoneRotating(float currentAngle) {
+	private boolean isDoneRotating(double currentAngle) {
 		if (targetAngle > 0) {
 			return currentAngle >= targetAngle;
 		} else {

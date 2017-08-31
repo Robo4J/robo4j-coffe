@@ -220,7 +220,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 				updateState(FastestPathState.MOVE_TO_TARGET);
 				startMoveToTarget();
 			}
-		}, TURN_SPEED, /* TODO: add turn direction from here*/ 0f, (float) Math.toDegrees(message.getTargetPoint().getAngle())));
+		}, TURN_SPEED, /* TODO: add turn direction from here*/ 0f, message.getTargetPoint().getAngle()));
 	}
 
 	private void reset() {

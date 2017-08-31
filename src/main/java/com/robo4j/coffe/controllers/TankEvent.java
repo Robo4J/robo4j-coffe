@@ -34,10 +34,15 @@ public class TankEvent {
 	/**
 	 * Constructor.
 	 * 
-	 * @param rotationDoneListener 
+	 * @param rotationDoneListener
+	 *            if rotation set, will trigger when rotated the specified
+	 *            amount.
 	 * @param speed
+	 *            normalized speed
 	 * @param direction
+	 *            in radians
 	 * @param rotate
+	 *            in radians
 	 */
 	public TankEvent(RoboReference<RotationDoneNotification> rotationDoneListener, float speed, float direction, float rotate) {
 		this.rotationDoneListener = rotationDoneListener;
