@@ -215,12 +215,12 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
 			@Override
 			public void sendMessage(RotationDoneNotification message) {
-				// Should probably schedule a time out thing here too... If
-				// rotation fails.
-				updateState(FastestPathState.MOVE_TO_TARGET);
-				startMoveToTarget();
+				if (message == RotationDoneNotification.ROTATION_COMPLETE) {
+					updateState(FastestPathState.MOVE_TO_TARGET);
+					startMoveToTarget();
+				}
 			}
-		}, ROTATION_SPEED, /* TODO: add turn direction from here*/ 0f, message.getTargetPoint().getAngle()));
+		}, ROTATION_SPEED, /* TODO: add turn direction from here */ 0f, message.getTargetPoint().getAngle()));
 	}
 
 	private void reset() {

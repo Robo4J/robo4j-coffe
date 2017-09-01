@@ -16,6 +16,6 @@
  */
 package com.robo4j.coffe.controllers;
 
-public class RotationDoneNotification {
-
+public enum RotationDoneNotification {
+	ROTATION_COMPLETE, ROTATION_ABORTED
 }
