@@ -209,8 +209,6 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		getScanProcessor().sendMessage(new ProcessingRequest(analysisDelegate, message, Scope.ALL, message.getAngularResolution()));
 	}
 
-	// NOTE(Marcus/Aug 30, 2017): This is delivered on the work queue, which is
-	// fine, since we will start calculating a lot... ;)
 	private void updateFromNewKnowledge(AnalysisResult message) {
 		getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
 			@Override
