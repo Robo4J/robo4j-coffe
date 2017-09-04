@@ -123,6 +123,7 @@ public class TankController extends RoboUnit<TankEvent> {
 		return ctx;
 	}
 
+	@Override
 	public void stop() {
 		stopRotating();
 		setSpeed(0, 0);

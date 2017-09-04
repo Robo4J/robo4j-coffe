@@ -91,7 +91,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		// scheduled in the worker pool anyways.
 		@Override
 		public void sendMessage(ScanResult2D message) {
-			receiveNewScan(message);
+			receiveFullScan(message);
 		}
 	}
 
@@ -190,22 +190,26 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		}
 	}
 
-	private void receiveNewScan(ScanResult2D message) {
+	private void receiveFullScan(ScanResult2D message) {
 		laserLock.set(false);
 		// Send to feature extractor on the worker thread.
 		getScanProcessor().sendMessage(new ProcessingRequest(analysisDelegate, message, Scope.ALL, message.getAngularResolution()));
 	}
 
-	private void updateFromNewKnowledge(AnalysisResult message) {
-		getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
-			@Override
-			public void sendMessage(RotationDoneNotification message) {
-				if (message == RotationDoneNotification.ROTATION_COMPLETE) {
-					updateState(FastestPathState.MOVE_TO_TARGET);
-					startMoveToTarget();
+	private void updateFromNewKnowledge(final AnalysisResult message) {
+		if (currentPathState == FastestPathState.NMI) {
+			getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
+				@Override
+				public void sendMessage(RotationDoneNotification rotMessage) {
+					if (rotMessage == RotationDoneNotification.ROTATION_COMPLETE) {
+						startMoveToTarget(message);
+					}
 				}
-			}
-		}, ROTATION_SPEED, /* TODO: add turn direction from here */ 0f, message.getTargetPoint().getAngle()));
+			}, ROTATION_SPEED, /* TODO: add turn direction from here */ 0f, message.getTargetPoint().getAngle()));
+			printMessage(Color.YELLOW, String.format("Rotating...\nR:%2.1f A:%2.1f", message.getTargetPoint().getRange(), message.getTargetPoint().getAngle()));
+		} else if (currentPathState == FastestPathState.MOVE_TO_TARGET) {
+			
+		}
 	}
 
 	private void reset() {
@@ -237,11 +241,13 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	}
 
 	private void updateState(FastestPathState newState) {
+		currentPathState = newState;
 		printMessage(newState.getStateColor(), newState.getHumanFriendlyName());
 	}
 
-	private void startMoveToTarget() {
-		System.out.println("Moving to target");
+	private void startMoveToTarget(AnalysisResult message) {
+		updateState(FastestPathState.MOVE_TO_TARGET);
+		printMessage(Color.GREEN, String.format("Moving to target\nR: %2.1f A: %2.1f", message.getTargetPoint().getRange(), 0));
 		getTank().sendMessage(new TankEvent(0, 0, 0));
 		// 1. Quick scan...
 		// 2. Analyze quick scan...
