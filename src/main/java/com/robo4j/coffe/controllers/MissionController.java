@@ -207,7 +207,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 					}
 				}
 			}, ROTATION_SPEED, /* TODO: add turn direction from here */ 0f, message.getTargetPoint().getAngle()));
-			printMessage(Color.YELLOW, String.format("Rotating...\nR:%2.1f A:%2.1f", message.getTargetPoint().getRange(), message.getTargetPoint().getAngle()));
+			printMessage(Color.YELLOW, String.format("Rotating...\nR:%2.1f A:%2.1f", message.getTargetPoint().getRange(), Math.toDegrees(message.getTargetPoint().getAngle())));
 		} else if (currentPathState == FastestPathState.MOVE_TO_TARGET) {
 			
 		}
