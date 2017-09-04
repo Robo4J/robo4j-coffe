@@ -29,8 +29,6 @@ import com.robo4j.core.RoboUnit;
 import com.robo4j.core.configuration.Configuration;
 import com.robo4j.core.logging.SimpleLoggingUtil;
 import com.robo4j.hw.rpi.i2c.adafruitlcd.Color;
-import com.robo4j.math.features.Raycast;
-import com.robo4j.math.geometry.Point2f;
 import com.robo4j.math.geometry.ScanResult2D;
 import com.robo4j.units.rpi.lcd.LcdMessage;
 import com.robo4j.units.rpi.lidarlite.ScanRequest;
@@ -84,27 +82,16 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	private String refIdScanner;
 	private String refIdScanProcessor;
 
-	/**
-	 * This is a simple delegate class for accepting the scan messages.
-	 * NOTE(Marcus/Aug 30, 2017): Use the LocalReferenceAdapter here...
-	 */
-	private class ScannerDelegate extends RoboUnit<ScanResult2D> {
-		private static final String ID_SCANNER_DELEGATE = "__scannerDelegate";
-
+	private class ScannerDelegate extends LocalReferenceAdapter<ScanResult2D> {
 		public ScannerDelegate() {
-			super(ScanResult2D.class, MissionController.this.getContext(), ID_SCANNER_DELEGATE);
-		}
-
-		@Override
-		public void onMessage(ScanResult2D message) {
-			receiveNewScan(message);
+			super(ScanResult2D.class);
 		}
 
 		// Don't bother scheduling this - the processing of the results will be
 		// scheduled in the worker pool anyways.
 		@Override
 		public void sendMessage(ScanResult2D message) {
-			onMessage(message);
+			receiveNewScan(message);
 		}
 	}
 
@@ -245,7 +232,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		return getContext().getReference(refIdScanProcessor);
 	}
 
-	public RoboUnit<?> getDelegate() {
+	public RoboReference<ScanResult2D> getScannerDelegate() {
 		return scannerDelegate;
 	}
 
