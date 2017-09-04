@@ -202,6 +202,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 				@Override
 				public void sendMessage(RotationDoneNotification rotMessage) {
 					if (rotMessage == RotationDoneNotification.ROTATION_COMPLETE) {
+						getTank().sendMessage(new TankEvent(0, 0, 0));
 						startMoveToTarget(message);
 					}
 				}
@@ -248,7 +249,6 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	private void startMoveToTarget(AnalysisResult message) {
 		updateState(FastestPathState.MOVE_TO_TARGET);
 		printMessage(Color.GREEN, String.format("Moving to target\nR: %2.1f A: %2.1f", message.getTargetPoint().getRange(), 0));
-		getTank().sendMessage(new TankEvent(0, 0, 0));
 		// 1. Quick scan...
 		// 2. Analyze quick scan...
 		// 3. If not too close, update speed and direction...
