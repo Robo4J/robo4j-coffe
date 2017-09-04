@@ -201,9 +201,13 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 			getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
 				@Override
 				public void sendMessage(RotationDoneNotification rotMessage) {
-					if (rotMessage == RotationDoneNotification.ROTATION_COMPLETE) {
-						getTank().sendMessage(new TankEvent(0, 0, 0));
-						startMoveToTarget(message);
+					try {
+						if (rotMessage == RotationDoneNotification.ROTATION_COMPLETE) {
+							getTank().sendMessage(new TankEvent(0, 0, 0));
+							startMoveToTarget(message);
+						}
+					} catch (Throwable t) {
+						SimpleLoggingUtil.debug(getClass(), "Move to target failed.", t);
 					}
 				}
 			}, ROTATION_SPEED, /* TODO: add turn direction from here */ 0f, message.getTargetPoint().getAngle()));
@@ -248,7 +252,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 
 	private void startMoveToTarget(AnalysisResult message) {
 		updateState(FastestPathState.MOVE_TO_TARGET);
-		printMessage(Color.GREEN, String.format("Moving to target\nR: %2.1f A: %2.1f", message.getTargetPoint().getRange(), 0));
+		printMessage(Color.GREEN, String.format("Moving to target\nR: %2.1f A: %2.1f", message.getTargetPoint().getRange(), 0f));
 		// 1. Quick scan...
 		// 2. Analyze quick scan...
 		// 3. If not too close, update speed and direction...
