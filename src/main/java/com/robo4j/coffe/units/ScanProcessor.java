@@ -60,8 +60,10 @@ public class ScanProcessor extends RoboUnit<ProcessingRequest> {
 		// is marked as @WorkTrait.
 		FeatureSet features = FeatureExtraction.getFeatures(message.getScan().getPoints(), message.getAngularResolution());
 		Point2f targetPoint = Raycast.raycastMostPromisingPoint(message.getScan().getPoints(), MIN_LATERAL_DISTANCE,
-				DETAILED_RAYCASTING_STEP_ANGLE, features);
+				message.getAngularResolution() < 1 ? DETAILED_RAYCASTING_STEP_ANGLE : RAYCASTING_STEP_ANGLE, features);
 
-		message.getRecipient().sendMessage(new AnalysisResult(message.getScan(), features, targetPoint));
+		Point2f centerPoint = Raycast.raycastAtAngle(message.getScan().getPoints(), -ONE_DEGREE, ONE_DEGREE, DETAILED_RAYCASTING_STEP_ANGLE,
+				MIN_LATERAL_DISTANCE, features);
+		message.getRecipient().sendMessage(new AnalysisResult(message.getScan(), features, targetPoint, centerPoint));
 	}
 }

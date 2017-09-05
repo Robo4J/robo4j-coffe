@@ -32,11 +32,13 @@ public final class AnalysisResult {
 	private final ScanResult2D source;
 	private final FeatureSet features;
 	private final Point2f targetPoint;
+	private final Point2f centerPoint;
 
-	public AnalysisResult(ScanResult2D source, FeatureSet features, Point2f targetPoint) {
+	public AnalysisResult(ScanResult2D source, FeatureSet features, Point2f targetPoint, Point2f centerPoint) {
 		this.source = source;
 		this.features = features;
 		this.targetPoint = targetPoint;
+		this.centerPoint = centerPoint;
 	}
 
 	public FeatureSet getFeatures() {
@@ -49,5 +51,9 @@ public final class AnalysisResult {
 
 	public Point2f getTargetPoint() {
 		return targetPoint;
+	}
+
+	public Point2f getCenterPoint() {
+		return centerPoint;
 	}
 }

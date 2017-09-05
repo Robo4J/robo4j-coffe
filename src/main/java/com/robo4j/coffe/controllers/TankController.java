@@ -133,18 +133,15 @@ public class TankController extends RoboUnit<TankEvent> {
 		isRotating.set(false);
 		getGyro().sendMessage(new GyroRequest(gyroDelegate, GyroAction.STOP, null));
 	}
-	
+
 	public void rotate(TankEvent message) {
 		if (isRotating.compareAndSet(false, true)) {
 			targetAngle = (float) Math.toDegrees(message.getRotate());
 			rotationDoneListener = message.getRotationDoneListener();
-			getGyro().sendMessage(new GyroRequest(gyroDelegate, GyroAction.CONTINUOUS, new Tuple3f(GyroRequest.DO_NOT_CARE, GyroRequest.DO_NOT_CARE, 1.0f)));
+			getGyro().sendMessage(new GyroRequest(gyroDelegate, GyroAction.CONTINUOUS,
+					new Tuple3f(GyroRequest.DO_NOT_CARE, GyroRequest.DO_NOT_CARE, 1.0f)));
 			float direction = 0;
-			if (isUsingTracks) {
-				direction = message.getRotate() > 0 ? DEGREES_80 : DEGREES_280;
-			} else {
-				direction = message.getRotate() > 0 ? DEGREES_90 : DEGREES_270;
-			}
+			direction = message.getRotate() > 0 ? getRotationDirectionRight(isUsingTracks) : getRotationDirectionLeft(isUsingTracks);
 			setSpeed(message.getSpeed(), direction);
 		} else {
 			SimpleLoggingUtil.debug(getClass(), "Got a request to rotate, but ignored it since we are already rotating...");
@@ -188,7 +185,7 @@ public class TankController extends RoboUnit<TankEvent> {
 
 	private static void notifyRotationTarget(RoboReference<RotationDoneNotification> listener) {
 		listener.sendMessage(RotationDoneNotification.ROTATION_COMPLETE);
-	}	
+	}
 
 	@Override
 	public void onMessage(TankEvent message) {
@@ -199,4 +196,20 @@ public class TankController extends RoboUnit<TankEvent> {
 			setSpeed(message.getSpeed(), message.getDirection());
 		}
 	}
+
+	public static float getRotationDirectionRight(boolean isUsingTracks) {
+		if (isUsingTracks) {
+			return DEGREES_80;
+		} else {
+			return DEGREES_90;
+		}
+	}
+
+	public static float getRotationDirectionLeft(boolean isUsingTracks) {
+		if (isUsingTracks) {
+			return DEGREES_280;
+		} else {
+			return DEGREES_270;
+		}
+	}	
 }

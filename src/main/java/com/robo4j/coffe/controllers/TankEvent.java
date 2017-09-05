@@ -51,18 +51,33 @@ public class TankEvent {
 		this.rotate = rotate;
 	}
 
-	public TankEvent(int speed, int direction, int rotation) {
+	public TankEvent(float speed, float direction, float rotation) {
 		this(null, speed, direction, rotation);
 	}
 
+	/**
+	 * Returns the normalized speed.
+	 * 
+	 * @return the normalized speed.
+	 */
 	public float getSpeed() {
 		return speed;
 	}
 
+	/**
+	 * Returns the direction, in radians.
+	 * 
+	 * @return the direction, in radians.
+	 */
 	public float getDirection() {
 		return direction;
 	}
 
+	/**
+	 * Returns the degrees to rotate, in radians.
+	 * 
+	 * @return the degrees to rotate, in radians.
+	 */
 	public float getRotate() {
 		return rotate;
 	}
