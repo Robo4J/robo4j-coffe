@@ -16,9 +16,9 @@
  */
 package com.robo4j.coffe.units;
 
-import com.robo4j.core.RoboContext;
-import com.robo4j.core.RoboUnit;
-import com.robo4j.core.WorkTrait;
+import com.robo4j.RoboContext;
+import com.robo4j.RoboUnit;
+import com.robo4j.WorkTrait;
 import com.robo4j.math.features.FeatureExtraction;
 import com.robo4j.math.features.FeatureSet;
 import com.robo4j.math.features.Raycast;

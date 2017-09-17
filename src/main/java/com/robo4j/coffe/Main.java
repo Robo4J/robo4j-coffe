@@ -18,19 +18,19 @@ package com.robo4j.coffe;
 
 import java.io.IOException;
 
+import com.robo4j.ConfigurationException;
+import com.robo4j.LocalReferenceAdapter;
+import com.robo4j.RoboBuilder;
+import com.robo4j.RoboBuilderException;
+import com.robo4j.RoboContext;
 import com.robo4j.coffe.controllers.MissionControllerEvent;
-import com.robo4j.core.ConfigurationException;
-import com.robo4j.core.LocalReferenceAdapter;
-import com.robo4j.core.RoboBuilder;
-import com.robo4j.core.RoboBuilderException;
-import com.robo4j.core.RoboContext;
-import com.robo4j.core.logging.SimpleLoggingUtil;
-import com.robo4j.core.util.SystemUtil;
 import com.robo4j.hw.rpi.i2c.adafruitlcd.Color;
+import com.robo4j.logging.SimpleLoggingUtil;
 import com.robo4j.units.rpi.gyro.GyroEvent;
 import com.robo4j.units.rpi.gyro.GyroRequest;
 import com.robo4j.units.rpi.gyro.GyroRequest.GyroAction;
 import com.robo4j.units.rpi.lcd.LcdMessage;
+import com.robo4j.util.SystemUtil;
 
 /**
  * The main class for running Coff-E.

@@ -16,7 +16,7 @@
  */
 package com.robo4j.coffe.units;
 
-import com.robo4j.core.RoboReference;
+import com.robo4j.RoboReference;
 import com.robo4j.math.geometry.ScanResult2D;
 
 /**

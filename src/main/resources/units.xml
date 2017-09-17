@@ -34,7 +34,7 @@
 			<!-- 0x40 hex -->
 			<value name="address" type="int">0x40</value>
 			<value name="channel" type="int">0</value>
-			<value name="trim" type="float">3</value>
+			<value name="trim" type="float">7</value>
 			<value name="shutdownValue" type="float">0</value>
 		</config>
 	</roboUnit>
