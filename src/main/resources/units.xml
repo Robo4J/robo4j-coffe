@@ -1,7 +1,7 @@
 <robo4j>
 	<roboUnit id="lcd">
 		<class>com.robo4j.units.rpi.lcd.AdafruitLcdUnit</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="bus" type="int">1</value>
 			<value name="address" type="int">0x20</value>
 		</config>
@@ -9,7 +9,7 @@
 
 	<roboUnit id="buttons">
 		<class>com.robo4j.units.rpi.lcd.AdafruitButtonUnit</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="bus" type="int">1</value>
 			<value name="address" type="int">0x20</value>
 			<value name="target" type="String">controller</value>
@@ -18,7 +18,7 @@
 	<robo4j>
 		<roboUnit id="motion">
 			<class>com.robo4j.units.rpi.roboclaw.RoboClawRCTankUnit</class>
-			<config name="com.robo4j.core.root">
+			<config name="com.robo4j.root">
 				<value name="bus" type="int">1</value>
 				<!-- 0x40 hex -->
 				<value name="address" type="int">0x40</value>
@@ -29,7 +29,7 @@
 	</robo4j>
 	<roboUnit id="laserscanner.servo">
 		<class>com.robo4j.units.rpi.pwm.PCA9685ServoUnit</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="bus" type="int">1</value>
 			<!-- 0x40 hex -->
 			<value name="address" type="int">0x40</value>
@@ -40,7 +40,7 @@
 	</roboUnit>
 	<roboUnit id="laserscanner.tilt">
 		<class>com.robo4j.units.rpi.pwm.PCA9685ServoUnit</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="bus" type="int">1</value>
 			<!-- 0x40 hex -->
 			<value name="address" type="int">0x40</value>
@@ -52,7 +52,7 @@
 	</roboUnit>
 	<roboUnit id="scanner">
 		<class>com.robo4j.units.rpi.lidarlite.LaserScanner</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="bus" type="int">1</value>
 			<!-- 0x40 hex -->
 			<value name="address" type="int">0x62</value>
@@ -70,7 +70,7 @@
 	</roboUnit>
 	<roboUnit id="gyro">
 		<class>com.robo4j.units.rpi.gyro.GyroL3GD20Unit</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="bus" type="int">1</value>
 			<value name="address" type="int">0x6b</value>
 			<value name="sensitivity" type="String">DPS_245</value>
@@ -81,7 +81,7 @@
 	</roboUnit>
 	<roboUnit id="tank">
 		<class>com.robo4j.coffe.controllers.TankController</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="useTracks" type="boolean">false</value>
 			<!-- This is a scalar with which the speed will be multiplied Set to 1.0 
 				to make Coff-E run at max speed. Set to lower to limit the speed. -->
@@ -93,7 +93,7 @@
 	</roboUnit>
 	<roboUnit id="missioncontroller">
 		<class>com.robo4j.coffe.controllers.MissionController</class>
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<value name="lcd" type="String">lcd</value>
 			<value name="tank" type="String">tank</value>
 			<value name="scanner" type="String">scanner</value>
