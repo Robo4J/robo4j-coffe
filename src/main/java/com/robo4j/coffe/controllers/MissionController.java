@@ -384,10 +384,8 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	private void startMoveToTarget(AnalysisResult message) {
 		updateState(FastestPathState.MOVE_TO_TARGET);
 		printMessage(Color.GREEN, String.format("Moving to target\nR: %2.1f A: %2.1f", message.getTargetPoint().getRange(), 0f));
-		// 1. Quick scan...
 		scheduleQuickScan();
-		// 2. Analyze quick scan...
-		// 3. If not too close, update speed and direction...
-		// 4. If too close, enter NMI.
+		// Full speed ahead!
+		getTank().sendMessage(new TankEvent(1.0f, 0f, 0f));
 	}
 }
