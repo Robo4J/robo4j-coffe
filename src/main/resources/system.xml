@@ -1,7 +1,7 @@
 <robo4j>
 	<!-- Note that UUID override is possible here by setting id (not recommended) -->
 	<roboSystem id="Coff-E">
-		<config name="com.robo4j.core.root">
+		<config name="com.robo4j.root">
 			<!-- Thread pool size for on CPU workloads that may take a bit of time 
 				Tip, make this less than the number of cores, and make sure sum of pools 
 				(except blocking pool) is less or equal to the number of cores. -->

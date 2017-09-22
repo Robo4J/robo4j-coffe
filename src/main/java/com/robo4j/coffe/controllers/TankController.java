@@ -18,12 +18,12 @@ package com.robo4j.coffe.controllers;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.robo4j.core.ConfigurationException;
-import com.robo4j.core.RoboContext;
-import com.robo4j.core.RoboReference;
-import com.robo4j.core.RoboUnit;
-import com.robo4j.core.configuration.Configuration;
-import com.robo4j.core.logging.SimpleLoggingUtil;
+import com.robo4j.ConfigurationException;
+import com.robo4j.RoboContext;
+import com.robo4j.RoboReference;
+import com.robo4j.RoboUnit;
+import com.robo4j.configuration.Configuration;
+import com.robo4j.logging.SimpleLoggingUtil;
 import com.robo4j.math.geometry.Tuple3f;
 import com.robo4j.units.rpi.gyro.GyroEvent;
 import com.robo4j.units.rpi.gyro.GyroRequest;

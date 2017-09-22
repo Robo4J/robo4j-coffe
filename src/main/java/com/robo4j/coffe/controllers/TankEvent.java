@@ -16,7 +16,7 @@
  */
 package com.robo4j.coffe.controllers;
 
-import com.robo4j.core.RoboReference;
+import com.robo4j.RoboReference;
 
 /**
  * The tank will either do a gyro based rotation or run in a specified direction
