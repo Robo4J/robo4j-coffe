@@ -34,7 +34,8 @@
 			<!-- 0x40 hex -->
 			<value name="address" type="int">0x40</value>
 			<value name="channel" type="int">0</value>
-			<value name="trim" type="float">7</value>
+			<value name="trim" type="float">-9.4</value>
+			<value name="inverted" type="boolean">true</value>
 			<value name="shutdownValue" type="float">0</value>
 		</config>
 	</roboUnit>
@@ -45,7 +46,7 @@
 			<!-- 0x40 hex -->
 			<value name="address" type="int">0x40</value>
 			<value name="channel" type="int">1</value>
-			<value name="trim" type="float">-40</value>
+			<value name="trim" type="float">16</value>
 			<value name="inverted" type="boolean">true</value>
 			<value name="shutdownValue" type="float">0</value>
 		</config>
@@ -65,7 +66,7 @@
 			<value name="minAquisitionTime" type="float">2.5</value>
 			<!-- Trim to align left to right and right to left scans This will be 
 				added/subtracted depending on direction -->
-			<value name="trim" type="float">5.5</value>
+			<value name="trim" type="float">3.97</value>
 		</config>
 	</roboUnit>
 	<roboUnit id="gyro">

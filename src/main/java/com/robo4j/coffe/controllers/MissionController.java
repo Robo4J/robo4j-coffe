@@ -44,7 +44,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	private static final boolean IS_USING_TRACKS = false;
 	private static final float DEGREES_25_IN_RAD = (float) Math.toRadians(25);
 
-	private static final float ROTATION_SPEED = 1.0f;
+	private static final float ROTATION_SPEED = 1.5f;
 	private static final float ANGULAR_RESOLUTION_FULL_SCAN = 0.4f;
 	private static final float ANGULAR_RESOLUTION_FAST_SCAN = 1f;
 
@@ -263,7 +263,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 				scheduleRangeMeasurement(goRight);
 				// We don't want to get notified from the Gyro, but rather the
 				// laser, hence no "rotation" in the tank sense.
-				getTank().sendMessage(new TankEvent(0.5f, goRight ? TankController.getRotationDirectionRight(IS_USING_TRACKS)
+				getTank().sendMessage(new TankEvent(1f, goRight ? TankController.getRotationDirectionRight(IS_USING_TRACKS)
 						: TankController.getRotationDirectionLeft(IS_USING_TRACKS), 0f));
 			} else {
 				getTank().sendMessage(new TankEvent(new LocalReferenceAdapter<RotationDoneNotification>(RotationDoneNotification.class) {
@@ -386,6 +386,6 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 		printMessage(Color.GREEN, String.format("Moving to target\nR: %2.1f A: %2.1f", message.getTargetPoint().getRange(), 0f));
 		scheduleQuickScan();
 		// Full speed ahead!
-		getTank().sendMessage(new TankEvent(1.0f, 0f, 0f));
+		getTank().sendMessage(new TankEvent(-1.0f, 0f, 0f));
 	}
 }

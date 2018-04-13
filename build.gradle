@@ -9,34 +9,18 @@ apply from: 'libraries.gradle'
 version "${robo4jVersion}"
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
     mavenLocal()
 }
 
-jar {
-    manifest {
-    attributes 'Implementation-Title': 'robo4j-coffe',
-            'Implementation-Version': version,
-            'Main-Class': 'com.robo4j.coffe.Main'
-	}
-}
-//create a single Jar with all dependencies
-task fatJar(type: Jar) {
-    baseName = 'robo4j-coffe'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = "${gradleVersion}"
-}
-
 dependencies {
     compile "com.robo4j:robo4j-core:${robo4jVersion}"
     compile "com.robo4j:robo4j-hw-rpi:${robo4jVersion}"
     compile "com.robo4j:robo4j-units-rpi:${robo4jVersion}"
+    compile fileTree(dir: 'libs', include: 'pi4j-core-1.2-20170907.193313-36.jar')
     testCompile "junit:junit:${junitVersion}@jar"
     testCompile "org.hamcrest:hamcrest-all:${hamcrestAllVersion}@jar"
     testCompile "org.mockito:mockito-all:${mockitoAllVersion}@jar"
@@ -60,4 +44,21 @@ sourceSets {
             srcDirs = ['src/test/resources']
         }
     }
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': rootProject.name,
+                'Implementation-Version': version,
+                'Main-Class': 'com.robo4j.coffe.Main'
+    }
+    //baseName = project.name + '-all'
+    baseName = rootProject.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "${roboGradleVersion}"
 }

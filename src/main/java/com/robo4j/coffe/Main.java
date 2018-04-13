@@ -17,6 +17,9 @@
 package com.robo4j.coffe;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import com.robo4j.ConfigurationException;
 import com.robo4j.LocalReferenceAdapter;
@@ -52,8 +55,12 @@ public class Main {
 	 */
 	public static void main(String[] args) throws RoboBuilderException, IOException, ConfigurationException, InterruptedException {
 		SimpleLoggingUtil.print(Main.class, "Starting Coff-E.\nLoading system...");
+
+		final InputStream unitConfigInputStream = args.length > 0 ? Files.newInputStream(Paths.get(args[0])) :
+                Main.class.getClassLoader().getResourceAsStream("units.xml");
+
 		RoboBuilder builder = new RoboBuilder(Main.class.getClassLoader().getResourceAsStream("system.xml"));
-		builder.add(Main.class.getClassLoader().getResourceAsStream("units.xml"));
+		builder.add(unitConfigInputStream);
 		final RoboContext ctx = builder.build();
 
 		SimpleLoggingUtil.print(Main.class, "System loaded. Starting...");
