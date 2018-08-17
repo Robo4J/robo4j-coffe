@@ -23,6 +23,7 @@ import com.robo4j.math.features.FeatureExtraction;
 import com.robo4j.math.features.FeatureSet;
 import com.robo4j.math.features.Raycast;
 import com.robo4j.math.geometry.Point2f;
+import com.robo4j.math.jfr.FeatureExtractionEvent;
 
 /**
  * This unit analyzes scans.
@@ -52,13 +53,18 @@ public class ScanProcessor extends RoboUnit<ProcessingRequest> {
 		super(ProcessingRequest.class, context, id);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onMessage(ProcessingRequest message) {
 		super.onMessage(message);
 		// NOTE(Marcus/Aug 20, 2017): The feature extraction is computationally
 		// expensive, but will not hold up the system scheduler, since this unit
 		// is marked as @WorkTrait.
+		FeatureExtractionEvent event = new FeatureExtractionEvent(message.getScan().getPoints().size(), message.getAngularResolution());
+		event.begin();
 		FeatureSet features = FeatureExtraction.getFeatures(message.getScan().getPoints(), message.getAngularResolution());
+		event.end();
+		event.commit();
 		Point2f targetPoint = Raycast.raycastMostPromisingPoint(message.getScan().getPoints(), MIN_LATERAL_DISTANCE,
 				message.getAngularResolution() < 1 ? DETAILED_RAYCASTING_STEP_ANGLE : RAYCASTING_STEP_ANGLE, features);
 
