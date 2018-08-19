@@ -73,7 +73,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 	 */
 	public static final String KEY_MODE_OF_OPERATION = "modeOfOperation";
 	// Robo4J head location
-	private static final Point2f ORIGO = new Point2f(0f, 0f);
+	private static final Point2f ORIGO = Point2f.fromPolar(0, 0);
 	// If closer than this, get more info
 	private static final float MIN_GOAL_RANGE = 0.5f;
 	private static final TankEvent STOP_MESSAGE = new TankEvent(0, 0, 0);
@@ -249,7 +249,7 @@ public class MissionController extends RoboUnit<MissionControllerEvent> {
 				getTank().sendMessage(STOP_MESSAGE);
 				updateState(FastestPathState.CORNERED);
 				printMessage(Color.RED, String.format("CornerEscape:\nG@%2.1fm,%2.1fdeg", message.getTargetPoint().getRange(),
-						Math.toDegrees(message.getTargetPoint().getAngle()), Color.RED));
+						Math.toDegrees(message.getTargetPoint().getAngle())));
 				Point2f p = message.getFeatures().getClosestCorner();
 				boolean goRight = false;
 				if (p != null && p.getRange() < 1) {
