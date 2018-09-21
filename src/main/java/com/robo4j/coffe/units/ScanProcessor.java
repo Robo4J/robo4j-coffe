@@ -65,7 +65,7 @@ public class ScanProcessor extends RoboUnit<ProcessingRequest> {
 		FeatureSet features = FeatureExtraction.getFeatures(message.getScan().getPoints(), message.getAngularResolution());
 		event.end();
 		event.commit();
-		Point2f targetPoint = Raycast.raycastMostPromisingPoint(message.getScan().getPoints(), MIN_LATERAL_DISTANCE,
+		Point2f targetPoint = Raycast.raycastFarthestPoint(message.getScan().getPoints(), MIN_LATERAL_DISTANCE,
 				message.getAngularResolution() < 1 ? DETAILED_RAYCASTING_STEP_ANGLE : RAYCASTING_STEP_ANGLE, features);
 
 		Point2f centerPoint = Raycast.raycastAtAngle(message.getScan().getPoints(), -ONE_DEGREE, ONE_DEGREE, DETAILED_RAYCASTING_STEP_ANGLE,
