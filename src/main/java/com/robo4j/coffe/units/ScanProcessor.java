@@ -53,7 +53,6 @@ public class ScanProcessor extends RoboUnit<ProcessingRequest> {
 		super(ProcessingRequest.class, context, id);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onMessage(ProcessingRequest message) {
 		super.onMessage(message);
